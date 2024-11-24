@@ -1,15 +1,19 @@
-CXX = g++
-CXXFLAGS = -Wall -Werror -Wextra -pedantic -std=c++17 -g -fsanitize=address
-LDFLAGS =  -fsanitize=address
-
-SRC = 
-OBJ = $(SRC:.cc=.o)
+# Variables
+NASM = nasm
+GCC = gcc
+CFLAGS = -nostartfiles -no-pie -lGL -lglfw -lGLEW -lm -lpthread
+ASM_SRC = src/main.asm
+OBJ = main.o
 EXEC = main
 
+# Targets
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJ) $(LBLIBS)
+	@$(GCC) $(CFLAGS) $(OBJ) -o $(EXEC)
+
+$(OBJ): $(ASM_SRC)
+	@$(NASM) -f elf64 $(ASM_SRC) -o $(OBJ)
 
 clean:
-	rm -rf $(OBJ) $(EXEC)
+	@rm -rf $(EXEC) $(OBJ)
